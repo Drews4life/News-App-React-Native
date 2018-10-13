@@ -8,10 +8,9 @@ export default StyleSheet.create({
         height: height * .5,
         width: width * .95,
         alignItems: 'center',
-        borderColor: 'black',
         borderWidth: 4,
         borderRadius: 10,
-        borderColor: 'black',
+        borderColor: 'rgba(10, 61, 145, .7)',
         marginTop: 10
     },
     textTitle: {
@@ -33,13 +32,14 @@ export default StyleSheet.create({
         marginBottom: 55,
     },
     btnMore: {
-        backgroundColor: 'rgb(255, 17, 104)',
-        height: '40%',
+        flexDirection: 'row',
+        backgroundColor: 'rgba(10, 61, 145, .7)',
+        height: '45%',
         width: width * .4,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,
-        borderRadius: 20
+        borderRadius: 20,
     },
     btnMoreText: {
         color: 'white',
@@ -51,12 +51,12 @@ export default StyleSheet.create({
         position: 'absolute',
         bottom: 70,
         backgroundColor: 'white',
-        width: width * 0.85,
-        height: height * 0.85,
+        width: width * 0.95,
+        height: height * 0.65,
         alignSelf: 'center',
         alignItems: 'center',
         borderRadius: 10,
-        borderColor: 'black',
+        borderColor: 'rgba(10, 61, 145, .7)',
         borderWidth: 3
     },
     imageWrapper: {

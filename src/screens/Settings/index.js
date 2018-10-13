@@ -97,7 +97,7 @@ class Settings extends Component {
                     </View>
                 </ScrollView>
                 <TouchableOpacity onPress={() => {
-                    this.props.navigation.navigate(NAV_TYPES.NEWS_FEED_WITH_PROFILE);
+                    this.props.navigation.goBack();
                 }}>
                     <View style={s.backButton}>
                         <Ionicons 

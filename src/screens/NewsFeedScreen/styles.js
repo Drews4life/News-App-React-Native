@@ -33,7 +33,7 @@ export default StyleSheet.create({
     txt: {
         alignSelf: 'center',
         textAlign: 'center',
-        marginRight: 150,
+        //marginRight: 150,
         paddingTop: 23,
         fontSize: 30,
         fontWeight: 'bold',

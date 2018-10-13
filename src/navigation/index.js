@@ -10,14 +10,30 @@ import SignUpScreen from '../screens/SignUpScreen';
 import NewsFeedScreen from '../screens/NewsFeedScreen';
 import SettingScreen from '../screens/Settings';
 import Profile from '../screens/ProfileDrawer';
+import BitcoinMain from '../screens/BitcoinMainScreen';
+import BitcoinSearch from '../screens/BitcoinSearchScreen';
 
-import {MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import {MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import * as NAV_TYPES from './navTypes';
 
 const Feed = createStackNavigator({
     [NAV_TYPES.NEWS_FEED]: {
         screen: NewsFeedScreen
+    },
+    [NAV_TYPES.NEWS_SCREEN_SETTINGS]: {
+        screen: SettingScreen
+    }
+}, {
+    headerMode: 'none'
+});
+
+const BitcoinChart = createStackNavigator({
+    [NAV_TYPES.BITCOIN_MAIN]: {
+        screen: BitcoinMain
+    },
+    [NAV_TYPES.BITCOIN_SEARCH]: {
+        screen: BitcoinSearch
     }
 }, {
     headerMode: 'none'
@@ -33,9 +49,7 @@ const FeedWithProfile = createDrawerNavigator({
 
 const MainTab = createBottomTabNavigator({
     [NAV_TYPES.NEWS_FEED_WITH_PROFILE]: FeedWithProfile,
-    [NAV_TYPES.SETTINGS]: {
-        screen: SettingScreen
-    },
+    [NAV_TYPES.BITCOIN_STACK]: BitcoinChart,
 }, {
     navigationOptions: ({ navigation }) => ({
         tabBarIcon: ({ focused, tintColor }) => {
@@ -43,8 +57,8 @@ const MainTab = createBottomTabNavigator({
 
           if (routeName === NAV_TYPES.NEWS_FEED_WITH_PROFILE) {
             return <FontAwesome name={`newspaper-o`} size={25} color={tintColor} />;
-          } else if (routeName === NAV_TYPES.SETTINGS) {
-            return <MaterialIcons name={`settings`} size={25} color={tintColor} />;
+          } else if (routeName === NAV_TYPES.BITCOIN_STACK) {
+            return <FontAwesome name={`btc`} size={25} color={tintColor} />;
           }
 
         },

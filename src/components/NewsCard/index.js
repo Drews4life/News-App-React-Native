@@ -8,11 +8,12 @@ import {
     Dimensions,
     Image,
     ScrollView,
-    Linking
+    Linking,
+    AsyncStorage
 } from 'react-native'
 import s from './styles';
 import _ from 'lodash';
-import Entypo from '@expo/vector-icons/Entypo';
+import {Entypo, Ionicons} from '@expo/vector-icons';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -32,6 +33,38 @@ export default class NewsCard extends React.PureComponent {
               alert('Sorry, URL cant be find.')
             }
           });
+    }
+
+    changeSaveButtonColor = () => {
+        this.setState(prevState => {
+            let color = '';
+            if(prevState.saveButtonColor === 'black') color = 'rgb(255, 17, 104)'
+            if(prevState.saveButtonColor === 'rgb(255, 17, 104)') color = 'black'
+
+            return {
+                ...prevState,
+                saveButtonColor: color
+            }
+        })
+    }
+
+    onSaveToFavouriteButton = async () => {
+       let itemsString = await AsyncStorage.getItem('favourites');
+       let items = JSON.parse(itemsString);
+       let newItems = [];
+
+       if(items !== null) {
+            items.forEach(item => {
+                if(item.url === this.props.generalItemData.url) return;
+            })
+
+           newItems = [...items, this.props.generalItemData ];
+       } else {
+           newItems = [ this.props.generalItemData ]
+       }
+
+       AsyncStorage.setItem('favourites', JSON.stringify(newItems))
+            .then(() => this.changeSaveButtonColor());
     }
 
     render() {
@@ -67,6 +100,12 @@ export default class NewsCard extends React.PureComponent {
 
                     <TouchableOpacity onPress={() => this.setState({ modalVisible: true })}>
                         <View style={s.btnMore}>
+                            <Ionicons 
+                                name="ios-more"
+                                size={30}
+                                color="white"
+                                style={{marginRight: 10}}
+                            />
                             <Text style={s.btnMoreText}>
                                 More
                             </Text>
@@ -132,16 +171,7 @@ export default class NewsCard extends React.PureComponent {
                                     <Entypo name={'back'} size={45} style={s.iconBottom}/>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity onPress={() => this.setState(prevState => {
-                                    let color = '';
-                                    if(prevState.saveButtonColor === 'black') color = 'rgb(255, 17, 104)'
-                                    if(prevState.saveButtonColor === 'rgb(255, 17, 104)') color = 'black'
-
-                                    return {
-                                        ...prevState,
-                                        saveButtonColor: color
-                                    }
-                                })}>
+                                <TouchableOpacity onPress={this.onSaveToFavouriteButton}>
                                     <Entypo name={'star'} size={40} color={this.state.saveButtonColor} style={s.iconBottom}/>
                                 </TouchableOpacity>
                             </View>
