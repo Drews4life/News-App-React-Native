@@ -11,7 +11,7 @@ import {
 import * as NAV_TYPES from '../../navigation/navTypes';
 import { fetchNews } from '../../actions/fetchNewAction';
 import { connect } from 'react-redux';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import s from './styles';
 import countries from './countries.json';
 
@@ -51,9 +51,21 @@ class Settings extends Component {
     render() {
         return (
             <View style={s.wrappingContainer}>
+                <View style={s.header}>
+                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                        <Ionicons
+                            color="white"
+                            name={'ios-arrow-round-back'}
+                            size={60}
+                            style={[{ paddingLeft: 15, marginTop: 22 }]}
+                        />
+                    </TouchableOpacity>
 
-                <View style={s.container}>
-                    <Text style={s.chooseRegion}>Choose your Region:</Text>
+                    <Text style={s.chooseRegion}>
+                        Choose your Region
+                    </Text>
+                </View>
+
                     <View
                         style={s.inputWrapper}
                     >
@@ -64,21 +76,26 @@ class Settings extends Component {
                             value={this.state.filter}
                             onChangeText={this.onFilterChange}
                             placeholder={'Region'}
-                            placeholderTextColor={'black'}
+                            placeholderTextColor={'rgb(147, 146, 146)'}
                         />
                         <FontAwesome
                             style={{ marginRight: 10 }}
                             name='search'
-                            size={25}
-                            color='black'
+                            size={20}
+                            color='rgb(147, 146, 146)'
                         />
                     </View>
-                    <Text style={{ fontWeight: 'bold', }}>Current region: {this.state.currentRegion}</Text>
-
-                </View>
-
+                    <View style={s.currRegWrapper}>
+                        <Text style={{ 
+                            fontWeight: 'bold',
+                            color: 'rgb(10, 61, 145)'
+                        }}>
+                        Current region: {this.state.currentRegion}
+                        </Text>
+                    </View>
                 <ScrollView style={{
                     width: '85%',
+                    height: '50%'
                 }}>
                     <View style={s.scrollWrapper}>
                         {
