@@ -22,3 +22,7 @@ export const fetchCryptoList = () => dispatch => {
             })
         })
 }
+
+export const fetchCurrencyData = currency => {
+    
+}

@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
 
 export default StyleSheet.create({
     container: {
@@ -27,5 +28,5 @@ export default StyleSheet.create({
     },
     paddingBottom: {
         paddingBottom: 14,
-    }
+    },
 });

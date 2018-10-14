@@ -61,7 +61,7 @@ const MainTab = createBottomTabNavigator({
             return <FontAwesome name={`btc`} size={25} color={tintColor} />;
           }
 
-        },
+        },  
       })
 });
 

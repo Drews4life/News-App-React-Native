@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import s from './styles';
 import countries from './countries.json';
+import FilterInput from '../../components/Filter';
 
 
 const deviceHeight = Dimensions.get('window').height;
@@ -66,10 +67,8 @@ class Settings extends Component {
                     </Text>
                 </View>
 
-                    <View
-                        style={s.inputWrapper}
-                    >
-                        <TextInput
+                    
+                        <FilterInput
                             style={s.input}
                             underlineColorAndroid={'transparent'}
                             maxLength={35}
@@ -78,13 +77,7 @@ class Settings extends Component {
                             placeholder={'Region'}
                             placeholderTextColor={'rgb(147, 146, 146)'}
                         />
-                        <FontAwesome
-                            style={{ marginRight: 10 }}
-                            name='search'
-                            size={20}
-                            color='rgb(147, 146, 146)'
-                        />
-                    </View>
+                     
                     <View style={s.currRegWrapper}>
                         <Text style={{ 
                             fontWeight: 'bold',
