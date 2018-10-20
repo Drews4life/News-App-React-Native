@@ -1,62 +1,93 @@
 import React, { Component } from 'react'
-import { 
-  Text, 
-  View, 
-  TouchableOpacity, 
+import {
+  Text,
+  View,
+  TouchableOpacity,
   AsyncStorage,
   ScrollView,
-  Dimensions 
+  Dimensions,
+  ActivityIndicator
 } from 'react-native'
 import s from './styles';
-import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, FontAwesome } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import * as NAV_TYPES from '../../navigation/navTypes';
+import { fetchCurrenciesPrices } from '../../actions/fetchCryptoActions';
 import Expandable from '../../components/ExpandableView';
+import FilterInput from '../../components/Filter';
 import _ from 'lodash';
 
 
 
-export default class BitcoinMain extends Component {
+class BitcoinMain extends Component {
 
   state = {
     myCurrencies: [],
-    itemExpanded: false
+    filter: '',
+    refreshing: false
   }
 
   componentDidMount() {
+    //AsyncStorage.removeItem('currencies')
     AsyncStorage.getItem('currencies')
       .then(res => JSON.parse(res))
       .then(result => this.setState(
-        prevState => ({...prevState, myCurrencies: result})
-      ))
+        prevState => ({ ...prevState, myCurrencies: result }), () => {
+          const { myCurrencies } = this.state;
+          if (!_.isNull(myCurrencies) && !_.isUndefined(myCurrencies) && !_.isEmpty(myCurrencies)) {
+            console.log('is called with: ', this.state.myCurrencies)
+            this.props.fetchPrices(this.state.myCurrencies);
+          }
+        })
+      )
 
-    
+
   }
 
-  async componentWillReceiveProps(nextProps) {
-    
-    if(!_.isUndefined(nextProps.navigation.state.params)) {
-      if(!_.isUndefined(nextProps.navigation.state.params.shouldUpdate)) {
-        if(nextProps.navigation.state.params.shouldUpdate) {
-            let data = await AsyncStorage.getItem('currencies')
-            if(data !== null) {
-              let areEqual = data == JSON.stringify(this.state.myCurrencies);
-              
-              if(!areEqual) {
-                this.setState(
-                  prevState => ({...prevState, myCurrencies: JSON.parse(data)})
-                )
-              }
+  refreshItems = async () => {
 
-              return;
-            }
-        }
+    this.startIndicator();
+
+    let data = await AsyncStorage.getItem('currencies')
+    if (data !== null) {
+
+      this.props.fetchPrices(JSON.parse(data));
+
+      let areEqual = data == JSON.stringify(this.state.myCurrencies);
+
+      if (!areEqual) {
+        this.setState(
+          prevState => ({ ...prevState, myCurrencies: JSON.parse(data) })
+        )
+        this.endIndicator();
       }
+      this.endIndicator();
+      return;
     }
+
+
+    this.endIndicator();
     return;
   }
 
+  startIndicator = () => this.setState(
+    prevState => ({ ...prevState, refreshing: true })
+  )
+
+  endIndicator = () => this.setState(
+    prevState => ({ ...prevState, refreshing: false })
+  )
+
+  componentWillReceiveProps(nextProps) {
+    if(!_.isUndefined(nextProps.cryptoPrices)) {
+      console.log('cryptoprices: ', nextProps.cryptoPrices)
+    }
+  }
+
   render() {
+
+    const { myCurrencies } = this.state;
+
     return (
       <View style={s.container}>
         <View style={s.header}>
@@ -72,9 +103,44 @@ export default class BitcoinMain extends Component {
             />
           </TouchableOpacity>
         </View>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <FilterInput
+            style={[s.input]}
+            inputWrap={s.inputWrap}
+            underlineColorAndroid={'transparent'}
+            maxLength={35}
+            value={this.state.filter}
+            onChangeText={val => this.setState(
+              prevState => ({ ...prevState, filter: val })
+            )}
+            placeholder={'Currency'}
+            placeholderTextColor={'rgb(147, 146, 146)'}
+            autocapitalize={false}
+          />
+          <TouchableOpacity onPress={this.refreshItems}>
+            <View style={s.buttonRefresh}>
+              {this.state.refreshing ? (
+                <ActivityIndicator
+                  size='small'
+                  color="white"
+                />
+              ) : (
+                  <FontAwesome
+                    name='refresh'
+                    size={25}
+                    color='white'
+                  />
+                )}
+            </View>
+          </TouchableOpacity>
+        </View>
 
-        <ScrollView 
-          style={{width: '100%'}}
+        <ScrollView
+          style={{ width: '100%', marginTop: 5 }}
           contentContainerStyle={{
             justifyContent: 'center',
             alignItems: 'center'
@@ -82,11 +148,28 @@ export default class BitcoinMain extends Component {
         >
           <View>
             {
-              this.state.myCurrencies !== [] ? 
-                this.state.myCurrencies.map((item, i) => (
-                  <Expandable key={i} item={item}/>
-                ))
-              :
+              !_.isNull(myCurrencies) && !_.isUndefined(myCurrencies) && !_.isEmpty(myCurrencies) ?
+                this.state.myCurrencies.map((item, i) => {
+                  let price = 0;
+                  if(!_.isUndefined(this.props.cryptoPrices)) {
+                    this.props.cryptoPrices.filter((priceItem) => {
+                      if(!_.isUndefined(priceItem[item])) {
+                        price = priceItem[item];
+                      }
+                    })
+                  }
+                  console.log('price: ', price)
+                  if (item.includes(this.state.filter)) {
+                    return (
+                      <Expandable 
+                        key={i} 
+                        item={item}
+                        price={price} 
+                      />
+                    )
+                  }
+                })
+                :
                 <Text>Currenly there are no currencies choosen</Text>
             }
           </View>
@@ -96,3 +179,13 @@ export default class BitcoinMain extends Component {
     )
   }
 }
+
+mapStateToProps = state => ({
+  cryptoPrices: state.fetchCrypto.cryptoPrices
+})
+
+mapDispatchToProps = dispatch => ({
+  fetchPrices: currencies => dispatch(fetchCurrenciesPrices(currencies))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(BitcoinMain);

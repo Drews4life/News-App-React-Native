@@ -9,7 +9,7 @@ export default class Filter extends Component {
   render() {
     return (
         <View
-        style={s.inputWrapper}
+        style={[s.inputWrapper, this.props.inputWrap]}
     >
         <TextInput
             {...this.props}

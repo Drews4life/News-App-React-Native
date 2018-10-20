@@ -55,7 +55,7 @@ class MainView extends Component {
         this.setState({ isFetchingNews: true }, () => {
             setTimeout(() => {
                 this.setState({ isFetchingNews: false })
-            }, 2500);
+            }, 500);
         })
     }
 
@@ -183,7 +183,7 @@ class MainView extends Component {
                         />
                     </TouchableOpacity>
                 </View>
-                    <View style={{height: '78%'}}>
+                    <View style={{height: '85%'}}>
                     {
                         !loading ? this.renderNews() : (
                             <View style={{
@@ -211,16 +211,16 @@ class MainView extends Component {
                     }
                     </View>
 
-                <View style={{width: '100%', height: '6%'}}>
+                {/* <View style={{width: '100%', height: '6%'}}>
                     <AdMobBanner 
                         style={{flex: 1, }}
                         bannerSize="fullBanner"
                         adUnitID="ca-app-pub-5005943924699126/2573483523"
                         // Test ID, Replace with your-admob-unit-id
-                        testDeviceID="EMULATOR"
+                        //testDeviceID="EMULATOR"
                         didFailToReceiveAdWithError={() => console.log('failed')}
                     />
-                </View>
+                </View> */}
             </View>
         );
     }
