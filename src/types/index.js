@@ -5,3 +5,7 @@ export const LOADING = 'loading';
 export const FETCH_CRYPTO_LIST = 'fetch_crypto_list';
 export const FETCH_CURRENCY_PRICES = 'fetch_currency_prices';
 export const FETCH_CURRENCY_DATA = 'fetch_currency_data';
+export const GET_OFFLINE_CURRENCIES = 'get_offline_currencies';
+export const DELETE_OFFLINE_CURRENCIE = 'delete_offline_currencie';
+export const LOADING_PRICES = 'loading_prices';
+export const LOADING_GRAPHS = 'loading_graphs';

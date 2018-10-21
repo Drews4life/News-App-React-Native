@@ -9,37 +9,35 @@ import {
     Image,
     ScrollView,
     Linking,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from 'react-native'
 import s from './styles';
 import _ from 'lodash';
-import {Entypo, Ionicons} from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
+import { WebBrowser } from 'expo';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
 
 export default class NewsCard extends React.PureComponent {
-    state = { 
+    state = {
         modalVisible: false,
-        saveButtonColor: 'black' 
+        saveButtonColor: 'black'
     }
 
     goToUrl = url => {
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-              Linking.openURL(this.props.url);
-            } else {
-              alert('Sorry, URL cant be find.')
-            }
-          });
+        this.setState(
+            prevState => ({ ...prevState, modalVisible: false }),
+        () => WebBrowser.openBrowserAsync(url));
     }
 
     changeSaveButtonColor = () => {
         this.setState(prevState => {
             let color = '';
-            if(prevState.saveButtonColor === 'black') color = 'rgb(255, 17, 104)'
-            if(prevState.saveButtonColor === 'rgb(255, 17, 104)') color = 'black'
+            if (prevState.saveButtonColor === 'black') color = 'rgb(255, 17, 104)'
+            if (prevState.saveButtonColor === 'rgb(255, 17, 104)') color = 'black'
 
             return {
                 ...prevState,
@@ -49,21 +47,21 @@ export default class NewsCard extends React.PureComponent {
     }
 
     onSaveToFavouriteButton = async () => {
-       let itemsString = await AsyncStorage.getItem('favourites');
-       let items = JSON.parse(itemsString);
-       let newItems = [];
+        let itemsString = await AsyncStorage.getItem('favourites');
+        let items = JSON.parse(itemsString);
+        let newItems = [];
 
-       if(items !== null) {
+        if (items !== null) {
             items.forEach(item => {
-                if(item.url === this.props.generalItemData.url) return;
+                if (item.url === this.props.generalItemData.url) return;
             })
 
-           newItems = [...items, this.props.generalItemData ];
-       } else {
-           newItems = [ this.props.generalItemData ]
-       }
+            newItems = [...items, this.props.generalItemData];
+        } else {
+            newItems = [this.props.generalItemData]
+        }
 
-       AsyncStorage.setItem('favourites', JSON.stringify(newItems))
+        AsyncStorage.setItem('favourites', JSON.stringify(newItems))
             .then(() => this.changeSaveButtonColor());
     }
 
@@ -74,10 +72,28 @@ export default class NewsCard extends React.PureComponent {
                     width: '100%',
                     height: '55%'
                 }}>
-                    <ImageBackground
-                        source={{ uri: this.props.image }}
-                        style={{ flex: 1 }}
-                    />
+
+                    {
+                        this.props.image === 'null' ? (
+                            <View style={{
+                                height: '50%',
+                                width: '100%',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center'
+                            }}>
+                                <ActivityIndicator
+                                    size='large'
+                                    color='rgb(33, 95, 196)'
+                                />
+                            </View>
+                        ) : (
+                                <ImageBackground
+                                    source={{ uri: this.props.image }}
+                                    style={{ flex: 1 }}
+                                />
+                            )
+                    }
+
                 </View>
 
                 <View style={s.wrapper}>
@@ -100,11 +116,11 @@ export default class NewsCard extends React.PureComponent {
 
                     <TouchableOpacity onPress={() => this.setState({ modalVisible: true })}>
                         <View style={s.btnMore}>
-                            <Ionicons 
+                            <Ionicons
                                 name="ios-more"
                                 size={30}
                                 color="white"
-                                style={{marginRight: 10}}
+                                style={{ marginRight: 10 }}
                             />
                             <Text style={s.btnMoreText}>
                                 More
@@ -119,63 +135,79 @@ export default class NewsCard extends React.PureComponent {
                     onRequestClose={() => {
                     }}
                 >
-                    
-                        <View style={s.modalArticleFull}>
-                            <View style={s.imageWrapper}>
-                                <Image
-                                    source={{ uri: this.props.image }}
-                                    style={s.imageItself}
-                                />
-                            </View>
 
-                            <ScrollView style={{
-                                width: '85%'
-                            }}>    
-                                <View style={{
-
-                                }}>
-                                    <Text style={{
-                                        fontSize: 14,
-                                        fontStyle: 'italic',
-                                        marginTop: 5
+                    <View style={s.modalArticleFull}>
+                        <View style={s.imageWrapper}>
+                            {
+                                this.props.image === 'null' ? (
+                                    <View style={{
+                                        height: '50%',
+                                        width: '100%',
+                                        justifyContent: 'flex-end',
+                                        alignItems: 'center'
                                     }}>
-                                        Author: {this.props.author !== null ? this.props.author : this.props.source}
-                                    </Text>
+                                        <ActivityIndicator
+                                            size='large'
+                                            color='rgb(33, 95, 196)'
+                                        />
+                                    </View>
+                                ) : (
+                                        <Image
+                                            source={{ uri: this.props.image }}
+                                            style={s.imageItself}
+                                        />
+                                    )
+                            }
+                        </View>
 
-                                    <Text style={{
-                                        marginTop: 15,
-                                        fontWeight: 'bold'
-                                    }}>
-                                        {this.props.description}
-                                    </Text>
-
-                                    <Text 
-                                        style={{
-                                            textAlign: 'center',
-                                            fontWeight: '800',
-                                            marginTop: 15,
-                                            color: 'blue'
-                                        }}
-                                        onPress={() => this.goToUrl(this.props.url)}
-                                    >
-                                        Source
-                                    </Text>
-                                </View>
-                            </ScrollView>
-
+                        <ScrollView style={{
+                            width: '85%'
+                        }}>
                             <View style={{
-                                flexDirection: 'row',
 
                             }}>
-                                <TouchableOpacity onPress={() => this.setState({modalVisible: false})}>
-                                    <Entypo name={'back'} size={45} style={s.iconBottom}/>
-                                </TouchableOpacity>
+                                <Text style={{
+                                    fontSize: 14,
+                                    fontStyle: 'italic',
+                                    marginTop: 5
+                                }}>
+                                    Author: {this.props.author !== null ? this.props.author : this.props.source}
+                                </Text>
 
-                                <TouchableOpacity onPress={this.onSaveToFavouriteButton}>
-                                    <Entypo name={'star'} size={40} color={this.state.saveButtonColor} style={s.iconBottom}/>
-                                </TouchableOpacity>
+                                <Text style={{
+                                    marginTop: 15,
+                                    fontWeight: 'bold'
+                                }}>
+                                    {this.props.description}
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontWeight: '800',
+                                        marginTop: 15,
+                                        color: 'blue'
+                                    }}
+                                    onPress={() => this.goToUrl(this.props.url)}
+                                >
+                                    Source
+                                    </Text>
                             </View>
+                        </ScrollView>
+
+                        <View style={{
+                            flexDirection: 'row',
+
+                        }}>
+                            <TouchableOpacity onPress={() => this.setState({ modalVisible: false })}>
+                                <Entypo name={'back'} size={45} style={s.iconBottom} />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={this.onSaveToFavouriteButton}>
+                                <Entypo name={'star'} size={40} color={this.state.saveButtonColor} style={s.iconBottom} />
+                            </TouchableOpacity>
                         </View>
+                    </View>
                 </Modal>
             </View>
         )

@@ -4,7 +4,7 @@ const INITIAL_STATE = {
     news: [],
     favourite: [],
     fetchingFavs: false,
-    fetchingNews: false,
+    fetchingNews: true,
     loading: false
 };
 
@@ -37,6 +37,6 @@ export default (state = INITIAL_STATE, action) => {
                 loading: true
             }
         default:
-            return state;
+            return {...state, loading: false};
     }
 };

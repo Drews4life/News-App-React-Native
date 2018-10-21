@@ -24,6 +24,12 @@ export const fetchCryptoList = () => dispatch => {
 }
 
 export const fetchCurrenciesPrices = currencies => dispatch => {
+
+    dispatch({
+        type: TYPES.LOADING_PRICES,
+        payload: true
+    })
+
     let queryData = currencies.map(t => t).join(',');
     fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${queryData}&tsyms=USD`, {method: 'GET'})
         .then(res => res.json())
@@ -35,6 +41,11 @@ export const fetchCurrenciesPrices = currencies => dispatch => {
                 });
             }
             dispatch({
+                type: TYPES.LOADING_PRICES,
+                payload: false
+            })
+
+            dispatch({
                 type: TYPES.FETCH_CURRENCY_PRICES,
                 payload: resultFromObjectToArray            
             })
@@ -42,6 +53,10 @@ export const fetchCurrenciesPrices = currencies => dispatch => {
 }
 
 export const fetchCurrencyGraph = currency => dispatch => {
+    dispatch({
+        type: TYPES.LOADING_GRAPHS,
+        payload: true
+    });
     fetch(`https://min-api.cryptocompare.com/data/histoday?fsym=${currency}&tsym=USD&limit=10`, {method: 'GET'})
         .then(res => res.json())
         .then(res => {
@@ -64,6 +79,11 @@ export const fetchCurrencyGraph = currency => dispatch => {
                 endingDate: endingDate,
                 currency: currency
             }
+
+            dispatch({
+                type: TYPES.LOADING_GRAPHS,
+                payload: false
+            });
 
             dispatch({
                 type: TYPES.FETCH_CURRENCY_DATA,

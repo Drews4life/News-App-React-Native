@@ -11,6 +11,7 @@ import {
 import s from './style';
 import { connect } from 'react-redux';
 import { fetchCryptoList } from '../../actions/fetchCryptoActions';
+import { getAllCurrenciesOffline } from '../../actions/getOfflineData';
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import FilterInput from '../../components/Filter';
 import * as NAV_TYPES from '../../navigation/navTypes';
@@ -88,9 +89,10 @@ class BitcoinSearch extends Component {
     return (
       <View style={s.container}>
         <View style={s.header}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate(NAV_TYPES.BITCOIN_MAIN, {
-            shouldUpdate: true
-          })}>
+          <TouchableOpacity onPress={() => {
+            this.props.navigation.navigate(NAV_TYPES.BITCOIN_MAIN)
+            this.props.updateCurrencies()
+          }}>
             <Ionicons
               color="white"
               name={'ios-arrow-round-back'}
@@ -170,7 +172,8 @@ mapStateToProps = state => ({
 })
 
 mapDispatchToProps = dispatch => ({
-  fetchCryptoList: () => dispatch(fetchCryptoList())
+  fetchCryptoList: () => dispatch(fetchCryptoList()),
+  updateCurrencies: () => dispatch(getAllCurrenciesOffline())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BitcoinSearch);

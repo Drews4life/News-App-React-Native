@@ -59,6 +59,10 @@ class MainView extends Component {
         })
     }
 
+    componentWillReceiveProps(nextProps) {
+        //if(nextProps.fetchingNews || nextProps.fetchingFavourite) //this.props.fetchNewsData();
+    }
+
     renderNews = () => {
         const {
             dataLoaded,
