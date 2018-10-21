@@ -6,7 +6,9 @@ import {
   FlatList, 
   ActivityIndicator,
   RefreshControl,
-  AsyncStorage 
+  AsyncStorage,
+  Modal,
+  Dimensions 
 } from 'react-native'
 import s from './style';
 import { connect } from 'react-redux';
@@ -16,11 +18,15 @@ import { Ionicons, Entypo } from '@expo/vector-icons';
 import FilterInput from '../../components/Filter';
 import * as NAV_TYPES from '../../navigation/navTypes';
 
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
 class BitcoinSearch extends Component {
 
   state = {
     filter: '',
-    refreshing: false
+    refreshing: false,
+    openModal: false
   }
 
   componentDidMount() {
@@ -68,7 +74,9 @@ class BitcoinSearch extends Component {
         AsyncStorage.setItem('currencies', JSON.stringify(parsedData))
           //.then();
       } else {
-        alert('Sorry, this item is already saved')
+        this.setState(
+          prevState => ({...prevState, openModal: true})
+        )
       }
 
     }
@@ -161,6 +169,53 @@ class BitcoinSearch extends Component {
             )
           }
           </View>
+          <Modal 
+            transparent
+            animationType='fade'
+            visible={this.state.openModal}
+          >
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                top: 250,
+                width: width * .75,
+                height: height * .25,
+                backgroundColor: 'rgb(39, 83, 153)',
+                borderRadius: 8
+              }}
+            >
+              <Text style={{
+                color: 'rgba(255,255,255, .9)',
+                fontSize: 15,
+                fontStyle: 'italic',
+                fontWeight: 'bold',
+              }}>This currency is already added</Text>
+              <TouchableOpacity
+                onPress={() => this.setState(
+                  prevState => ({...prevState, openModal: false})
+                )}
+              >
+                <View style={{
+                  width: width * .3,
+                  height: '50%',
+                  borderColor: 'rgba(255,255,255, .8)',
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 45
+                }}>
+                  <Text style={{
+                    color: 'rgba(255,255,255, .8)',
+                    fontSize: 17,
+                    fontWeight: 'bold'
+                  }}>OK</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Modal>
       </View>
     )
   }

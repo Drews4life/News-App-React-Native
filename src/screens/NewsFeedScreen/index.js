@@ -27,7 +27,8 @@ import * as NAV_TYPES from '../../navigation/navTypes';
 
 import NewsCard from '../../components/NewsCard';
 
-const { width, height } = Dimensions.get('window');
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 class MainView extends Component {
 
@@ -37,7 +38,6 @@ class MainView extends Component {
     }
 
     componentDidMount() {
-       // AsyncStorage.removeItem('name');
         AsyncStorage.getItem('region')
             .then(code => {
                 //change this
@@ -132,6 +132,7 @@ class MainView extends Component {
                                 title={item.title}
                                 url={item.url}
                                 generalItemData={item}
+                                isFavourite={true}
                             />
                         )}}
                     />

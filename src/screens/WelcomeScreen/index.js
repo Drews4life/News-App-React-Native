@@ -105,35 +105,29 @@ export default class WelcomeScreen extends Component {
                 horizontal
             >
                 <View style={[s.commonContainer, {
-                    backgroundColor: 'rgb(255, 255, 255)',
+                    backgroundColor: 'rgb(17, 142, 40)',
                 }]}>
                     <Animated.View style={{
                         transform: [{ translateY: this.state.posYfirstScreen }]
                     }}>
-                        <Entypo 
-                            name='star-outlined' 
-                            size={150} 
-                            color='rgb(165, 140, 39)'
-                            style={{alignSelf: 'center'}}
-                        />
                         <View style={{
                             borderWidth: 3,
                             borderRadius: 25,
-                            borderColor: 'rgb(165, 140, 39)',
+                            borderColor: 'rgb(255,255,255)',
                             marginHorizontal: 25
                         }}>
-                            <Text style={[s.txtWhite, { fontSize: 45 }]}>
+                            <Text style={[s.txtWhite, { fontSize: 45, color: 'rgb(255,255,255)' }]}>
                                 Welcome there!
                             </Text> 
                         </View>
-                        <Text style={[s.txtWhite, { fontSize: 15, marginTop: 35 }]}>
+                        <Text style={[s.txtWhite, { fontSize: 15, marginTop: 35, color:'rgb(255,255,255)' }]}>
                                 Swipe-Swipe :)
                         </Text>
                     </Animated.View>
                 </View>
 
                 <View style={[s.commonContainer, {
-                    backgroundColor: 'rgb(255, 255, 255)',
+                    backgroundColor: 'rgb(249, 108, 47)',
                     flexDirection: 'row',
                     alignItems: 'center'
                 }]}>
@@ -141,16 +135,9 @@ export default class WelcomeScreen extends Component {
                             position: 'absolute',
                             top: 5
                         }}>
-                            <Entypo 
-                                name='star-outlined' 
-                                size={150} 
-                                color='rgb(165, 140, 39)'
-                                style={{
-                                    alignSelf: 'center',
-                                }}
-                            />
-                            <Text style={[s.txtWhite, { fontSize: 15, fontWeight: 'bold' }]}>
-                                Touch each Tint :P
+                           
+                            <Text style={[s.txtWhite, s.tintTxt]}>
+                                *Touch each Tip :P
                             </Text>
                         </View>
                     <Animated.View style={{
@@ -158,7 +145,7 @@ export default class WelcomeScreen extends Component {
                     }}>
 
 
-                        <Text style={[s.txtWhite, s.textNextToArrow]}>
+                        <Text style={[s.txtWhite, s.textNextToArrow, {color: 'rgb(9, 1, 66)'}]}>
                             Nice! Lets go together?
                     </Text>
                     </Animated.View>
@@ -223,11 +210,11 @@ export default class WelcomeScreen extends Component {
                             transform: [{ translateY: this.state.posYsecondScreen }]
                         }}>
                             <TouchableOpacity onPress={this.onNextButton}>
-                                <View style={s.touchable}>
+                                <View style={[s.touchable, {borderColor: 'rgb(9, 1, 66)'}]}>
                                     <Ionicons
                                         name={'ios-arrow-round-forward'}
                                         size={55}
-                                        color={'rgb(165, 140, 39)'}
+                                        color={'rgb(9, 1, 66)'}
                                         style={{ marginTop: -15 }}
                                     />
                                 </View>

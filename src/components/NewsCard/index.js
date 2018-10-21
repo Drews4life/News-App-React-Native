@@ -27,6 +27,14 @@ export default class NewsCard extends React.PureComponent {
         saveButtonColor: 'black'
     }
 
+    componentWillMount() {
+        if(this.props.isFavourite) {
+            this.setState(
+                prevState => ({...prevState, saveButtonColor: 'rgb(255, 17, 104)'})
+            )
+        }
+    }
+
     goToUrl = url => {
         this.setState(
             prevState => ({ ...prevState, modalVisible: false }),

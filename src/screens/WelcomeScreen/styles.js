@@ -45,5 +45,11 @@ export default StyleSheet.create({
     }, 
     iconColor: {
         color: 'rgb(41, 90, 170)'
+    },
+    tintTxt: { 
+        fontSize: 15, 
+        fontWeight: 'bold', 
+        color: 'black', 
+        marginTop: 35
     }
 });

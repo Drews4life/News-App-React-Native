@@ -35,13 +35,7 @@ class Expandable extends Component {
         this.state = {
             openModal: false,
             itemExpanded: false,
-            dataForGraph: [
-                { x: 1, y: 2 },
-                { x: 2, y: 3 },
-                { x: 3, y: 5 },
-                { x: 4, y: 4 },
-                { x: 5, y: 7 }
-            ],
+            dataForGraph: [],
             startingDate: '',
             endingDate: ''
         };
@@ -49,9 +43,9 @@ class Expandable extends Component {
     }
 
     componentDidMount() {
-        if (!_.isUndefined(this.props.item)) {
-            this.props.getGraphData(this.props.item);
-        }
+        // if (!_.isUndefined(this.props.item)) {
+        //     this.props.getGraphData(this.props.item);
+        // }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -103,6 +97,16 @@ class Expandable extends Component {
             })
     }
 
+    getTransparency = () => {
+        if (this.state.itemExpanded && !_.isEmpty(this.state.dataForGraph)) {
+            return 'rgba(255,255,255, 0)'
+        } else if (this.state.itemExpanded) {
+            return 'rgba(255,255,255, 1)';
+        } else {
+            return 'rgba(255,255,255, 0)';
+        }
+    }
+
 
     render() {
         return (
@@ -113,11 +117,13 @@ class Expandable extends Component {
                     )}
                     onPress={() => this.setState(
                         prevState => ({ ...prevState, itemExpanded: !prevState.itemExpanded }),
-                    () => {
-                        if(this.state.itemExpanded) {
-                            alert('yes')
-                        }
-                    })}
+                        () => {
+                            if (this.state.itemExpanded) {
+                                if (!_.isUndefined(this.props.item)) {
+                                    this.props.getGraphData(this.props.item);
+                                }
+                            }
+                        })}
                 >
                     <View style={s.eachCurrency}>
                         <View style={{
@@ -161,15 +167,15 @@ class Expandable extends Component {
 
                             {
                                 this.props.isLoadingPrices ? (
-                                    <ActivityIndicator 
+                                    <ActivityIndicator
                                         size='small'
                                         color='white'
-                                        style={{marginHorizontal: 20}}
+                                        style={{ marginHorizontal: 20 }}
                                     />
                                 ) : (
-                                    <Text style={[s.currencyTxt, { marginRight: 15 }]}>{this.props.price}$</Text>
-                                )
-                            }                      
+                                        <Text style={[s.currencyTxt, { marginRight: 15 }]}>{this.props.price}$</Text>
+                                    )
+                            }
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -177,28 +183,44 @@ class Expandable extends Component {
                     width: width * 0.87,
                     height: this.state.itemExpanded ? height * 0.4 : 0
                 }, s.expanded]}>
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 13,
-                            paddingTop: 5
-                        }}
-                    >
-                        Starting period - {this.state.startingDate}
-                    </Text>
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 13,
-                            paddingTop: 5
-                        }}
-                    >
-                        Ending period - {this.state.endingDate}
-                    </Text>
+                    <View style={{
+                        marginTop: 35,
+                    }}>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 13,
+                                }}
+                            >
+                                From - {this.state.startingDate}{`  `}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 13,
+                                    
+                                }}
+                            >
+                                to - {this.state.endingDate}
+                            </Text>
+                        </View>
+                        <View style={{marginTop: 5}}>
+                            <ActivityIndicator
+                                size='small'
+                                color={                                   
+                                    this.getTransparency()
+                                }
+                            />
+                        </View>
+                    </View>
+                    
+
                     <VictoryChart
                         width={width * 0.77}
                         height={this.state.itemExpanded ? height * 0.35 : 0}
                         theme={VictoryTheme.material}
+                      
                     >
                         <VictoryLine
                             style={{
@@ -208,6 +230,8 @@ class Expandable extends Component {
                             data={this.state.dataForGraph}
                         />
                     </VictoryChart>
+
+
                 </View>
                 <Modal
                     animationType='fade'
@@ -215,16 +239,7 @@ class Expandable extends Component {
                     transparent
                 >
                     <View
-                        style={{
-                            backgroundColor: 'rgb(39, 83, 153)',
-                            width: width * .75,
-                            height: height * .25,
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 9,
-                            top: 250
-                        }}
+                        style={s.modalView}
                     >
                         <Text
                             style={{
@@ -251,7 +266,7 @@ class Expandable extends Component {
                                     name='delete'
                                     size={40}
                                     color='white'
-                                    style={{marginHorizontal: 25}}
+                                    style={{ marginHorizontal: 25 }}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.setState(
@@ -261,7 +276,7 @@ class Expandable extends Component {
                                     name='close-box-outline'
                                     size={40}
                                     color='white'
-                                    style={{marginHorizontal: 25, marginTop: 3}}
+                                    style={{ marginHorizontal: 25, marginTop: 3 }}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -274,7 +289,8 @@ class Expandable extends Component {
 
 mapStateToProps = state => ({
     graphData: state.fetchCrypto.cryptoData,
-    isLoadingPrices: state.fetchCrypto.loadingPrices
+    isLoadingPrices: state.fetchCrypto.loadingPrices,
+    isLoadingGraphs: state.fetchCrypto.loadingGraphs
 })
 
 mapDispatchToProps = dispatch => ({

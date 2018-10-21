@@ -31,5 +31,15 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(10, 61, 145, .4)',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    modalView: {
+        backgroundColor: 'rgb(39, 83, 153)',
+        width: deviceWidth * .75,
+        height: deviceHeight * .25,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 9,
+        top: 250
     }
 })
